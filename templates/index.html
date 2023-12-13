@@ -1,0 +1,57 @@
+<!-- In web_interface/templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualization of User Data</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1 onclick="navigateToHome()">Visualization of User Data</h1>
+    </header>
+    <div class="visualization-container">
+        <div class="visualization-box" id="organization-chart" onclick="renderOrganizationChart()">
+            <h2>Based on rganization</h2>
+            <!-- Chart for organization visualization will be rendered here -->
+        </div>
+        <div class="visualization-box" id="address-chart" onclick="renderAddressChart()">
+            <h2>Based on Location</h2>
+            <!-- Chart for address visualization will be rendered here -->
+        </div> 
+        <!-- Add similar divs for other sections (address, other) -->
+    </div>
+    <div id="chart-container" class="centered-container">
+    </div>
+
+
+    <!-- Include Plotly library for chart rendering -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        // Function to fetch and render organization chart
+        function renderOrganizationChart() {
+            fetch('/get_organization_chart')
+                .then(response => response.json())
+                .then(chartJson => {
+                    // Render the organization chart using Plotly
+                    var organizationChart = document.getElementById('chart-container');
+                    Plotly.newPlot(organizationChart, JSON.parse(chartJson));
+                });
+        }
+        function renderAddressChart() {
+             fetch('/get_address_chart')
+                .then(response => response.json()) 
+                .then(chartJson => {
+                var addressChart = document.getElementById('chart-container');
+                Plotly.newPlot(addressChart, JSON.parse(chartJson));
+            });
+        }
+        function navigateToHome() {
+            window.location.href = '/'; // Redirect to the home page
+        }
+
+
+    </script>
+</body>
+</html>
